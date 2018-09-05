@@ -553,7 +553,7 @@ this.api.afficheloading();
             //alert(JSON.stringify(imageData))
             //imageData = normalizeURL(imageData)
             // this.photo =  imageData;
-           // this.photo =  normalizeURL(imageData);
+              this.photo =  normalizeURL(imageData);
         //    console.log("BAYE DAME+++++"+imageData)
            // this.photo =  imageData.replace(/^file:\/\//, '');
         //    console.log("Photo dame ===>"+this.photo);
