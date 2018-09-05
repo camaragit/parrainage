@@ -10,6 +10,7 @@ import {GlobalVariableProvider} from "../../providers/gloabal-variable/gloabal-v
 import {Camera, CameraOptions} from '@ionic-native/camera';
 import {File} from "@ionic-native/file";
 import {FilePath} from "@ionic-native/file-path";
+import { normalizeURL } from 'ionic-angular';
 //import {FileTransfer, FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer";
 import {FTP} from "@ionic-native/ftp";
 
@@ -528,10 +529,10 @@ this.api.afficheloading();
         })
       }
       photographier(){
-        if(this.datauser.controls['idnfc'].value==""){
+    /*    if(this.datauser.controls['idnfc'].value==""){
           this.api.showError("Veuillez approchez votre carte d'abord!")
         }
-        else {
+        else {*/
 
           const options: CameraOptions = {
             quality: 100,
@@ -550,9 +551,15 @@ this.api.afficheloading();
             // If it's base64 (DATA_URL):
             //this.photo = 'data:image/jpeg;base64,' + imageData;
             //alert(JSON.stringify(imageData))
-            this.photo =  imageData;
+            //imageData = normalizeURL(imageData)
+            // this.photo =  imageData;
+           // this.photo =  normalizeURL(imageData);
+        //    console.log("BAYE DAME+++++"+imageData)
+           // this.photo =  imageData.replace(/^file:\/\//, '');
+        //    console.log("Photo dame ===>"+this.photo);
+
             //   this.file.moveFile()
-            this.filePath.resolveNativePath(imageData)
+    /*        this.filePath.resolveNativePath(imageData)
               .then((path) => {
 
                 let imagePath = path.substr(0, path.lastIndexOf("/") + 1);
@@ -561,7 +568,7 @@ this.api.afficheloading();
 
                 this.file.moveFile(imagePath, imageName, imagePath, this.filename)
                   .then(newFile => {
-                    //this.photo = newFile;
+                       //this.photo = newFile;
                    // this.filepath = newFile.nativeURL;
 
                     //console.log(newFile);
@@ -572,11 +579,12 @@ this.api.afficheloading();
               })
               .catch((err) => {
                 console.error(err);
-              })
+              })*/
+
           }, (err) => {
-            // Handle error
+            console.log("une belle erreur dame "+JSON.stringify(err))
           });
-       }
+    //   }
         }
 
 

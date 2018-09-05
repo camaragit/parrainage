@@ -28,35 +28,37 @@ export class LoginPage {
   }
 
   login() {
-    this.nfc.enabled().then(ok=>{
+    this.nav.push(RegisterPage);
 
-      this.Api.afficheloading();
-      this.Api.getpost(this.url.URL+"serviceAuthentification/?identifiant="+encodeURI(this.datalogin.controls['login'].value)+"&mdp="+encodeURI(this.datalogin.controls['password'].value))
-        .then(data=>{
-          this.Api.dismissloadin();
-          let val = JSON.parse(data.data);
+    /*    this.nfc.enabled().then(ok=>{
 
-          console.log("okk "+JSON.stringify(val));
+          this.Api.afficheloading();
+          this.Api.getpost(this.url.URL+"serviceAuthentification/?identifiant="+encodeURI(this.datalogin.controls['login'].value)+"&mdp="+encodeURI(this.datalogin.controls['password'].value))
+            .then(data=>{
+              this.Api.dismissloadin();
+              let val = JSON.parse(data.data);
 
-          if(val.code=="0")
-          {
-            this.datalogin.controls['login'].setValue("");
-            this.datalogin.controls['password'].setValue("");
-            this.store.set("token",val.token);
-            this.store.set("idmentor",val.idMentor);
-            this.nav.push(RegisterPage);
-          }
-          else this.Api.showError(val.message);
-        }).catch(err=>{
-        this.Api.dismissloadin();
-        console.log("erreur "+JSON.stringify(err));
-      })
-    }).catch(r=>{
-      if(r=="NO_NFC")
-        this.api.showError("Cet appareil ne peut lire de carte ");
-      else
-        this.api.showError("Vous devez activer le lecteur de carte d'abord ");
-    })
+              console.log("okk "+JSON.stringify(val));
+
+              if(val.code=="0")
+              {
+                this.datalogin.controls['login'].setValue("");
+                this.datalogin.controls['password'].setValue("");
+                this.store.set("token",val.token);
+                this.store.set("idmentor",val.idMentor);
+                this.nav.push(RegisterPage);
+              }
+              else this.Api.showError(val.message);
+            }).catch(err=>{
+            this.Api.dismissloadin();
+            console.log("erreur "+JSON.stringify(err));
+          })
+        }).catch(r=>{
+          if(r=="NO_NFC")
+            this.api.showError("Cet appareil ne peut lire de carte ");
+          else
+            this.api.showError("Vous devez activer le lecteur de carte d'abord ");
+        })*/
 
   }
   forgotPass() {
