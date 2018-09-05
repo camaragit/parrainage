@@ -536,7 +536,7 @@ this.api.afficheloading();
 
           const options: CameraOptions = {
             quality: 100,
-            destinationType: this.camera.DestinationType.FILE_URI,
+            destinationType: this.camera.DestinationType.NATIVE_URI,
             encodingType: this.camera.EncodingType.PNG,
             targetWidth : 180,
             targetHeight : 100,
