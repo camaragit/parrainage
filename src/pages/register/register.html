@@ -1,0 +1,139 @@
+<ion-header>
+
+  <ion-navbar color="light">
+
+    <ion-title> </ion-title>
+    <ion-buttons end="" >
+
+      <button  ion-button icon-end style="text-transform: none" (click)="logout()">
+      <span >Déconnexion
+        <ion-icon name="md-exit"></ion-icon>
+       </span>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+<!-- -->
+<ion-content  padding="" >
+
+    <div padding margin text-center>
+      <!--<div class="logo"></div>-->
+      <h2 ion-text class="text-primary" style="margin-bottom: -30px;">
+        <strong>Inscription membre</strong>
+      </h2>
+    </div>
+
+    <!-- Login form -->
+    <form class="list-form" [formGroup]="datauser">
+
+      <ion-item>
+        <ion-label floating>
+          <ion-icon name="person" item-start class="text-primary"></ion-icon>
+          Nom
+        </ion-label>
+        <ion-input type="text" formControlName="nom"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>
+          <ion-icon name="person" item-start class="text-primary"></ion-icon>
+          Prenom
+        </ion-label>
+        <ion-input type="text" formControlName="prenom"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>
+          <ion-icon name="ios-call" item-start class="text-primary"></ion-icon>
+          Telephone
+        </ion-label>
+        <ion-input type="tel" formControlName="telephone" maxlength="9" (ionBlur)="veriftel()" (ionFocus)="resetphone()"></ion-input>
+      </ion-item>
+
+      <ion-item
+        *ngIf="((datauser.controls.telephone.hasError('required')) || phoneinvalid==true) && datauser.controls.telephone.touched">
+        <p class="erreur">Saisir  un numéro valide </p>
+      </ion-item>
+      <ion-item >
+        <ion-label  floating>
+          <ion-icon name="md-calendar" item-start class="text-primary"></ion-icon>
+          Date de Naissance</ion-label>
+        <ion-datetime displayFormat="DD MMMM YYYY" doneText="Choisir" cancelText="Annuler" [max]="minDate"
+                      formControlName="datenaissance"></ion-datetime>
+      </ion-item>
+
+      <ion-list radio-group [formControl]="datauser.controls['genre']">
+        <ion-label>Sexe</ion-label>
+        <ion-item>
+          <ion-label>Masculin</ion-label>
+          <ion-radio value="H" checked></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Feminin</ion-label>
+          <ion-radio value="F"></ion-radio>
+        </ion-item>
+      </ion-list>
+
+      <ion-item>
+        <ion-label floating>
+          <ion-icon name="ios-card-outline" item-start class="text-primary"></ion-icon>
+          N° CIN
+        </ion-label>
+        <ion-input type="number" formControlName="piece"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>
+          <ion-icon name="ios-card-outline" item-start class="text-primary"></ion-icon>
+          N° CDEAO
+        </ion-label>
+        <ion-input type="number" formControlName="cdeao"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-buttons end="">
+
+          <button  ion-button icon-end style="text-transform: none" (click)="photographier()">
+      <span >Prendre une photo
+        <ion-icon name="ios-camera-outline"></ion-icon>
+       </span>
+          </button>
+        </ion-buttons>
+         <p *ngIf="photo" align="center"><img [src]="photo" ></p>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>
+          <ion-icon name="ios-planet" item-start class="text-primary"></ion-icon>
+          Région
+        </ion-label>
+        <ion-input type="text" formControlName="region" (click)="selectionRegion()" (focus)="selectionRegion()" readonly></ion-input>
+      </ion-item>
+      <span *ngIf="datauser.controls.region.valid">
+      <ion-item>
+        <ion-label floating>
+          <ion-icon name="ios-planet" item-start class="text-primary"></ion-icon>
+          Département
+        </ion-label>
+        <ion-input type="text" formControlName="departement"  (focus)="selectionDepartement()" (click)="selectionDepartement()" readonly></ion-input>
+      </ion-item>
+      <span *ngIf="datauser.controls.departement.valid">
+        <ion-item>
+        <ion-label floating>
+          <ion-icon name="ios-planet" item-start class="text-primary"></ion-icon>
+          Commune
+        </ion-label>
+        <ion-input type="text" formControlName="commune"  (focus)="selectionCommune()" (click)="selectionCommune()" readonly></ion-input>
+        </ion-item>
+      </span>
+
+      </span>
+      <div style="margin-top: 10%;margin-bottom: 10%">
+        <button ion-button icon-start block color="dark" [disabled]="!datauser.valid || phoneinvalid==true" tappable (click)="connectftp()">
+          <ion-icon  name="md-checkbox-outline"></ion-icon>
+          Inscrire
+        </button>
+      </div>
+
+    </form>
+
+
+
+</ion-content>
