@@ -76,16 +76,16 @@
       <ion-item>
         <ion-label floating>
           <ion-icon name="ios-card-outline" item-start class="text-primary"></ion-icon>
-          N° CIN
+          N° CDEAO
         </ion-label>
-        <ion-input type="number" formControlName="piece"></ion-input>
+        <ion-input type="tel" maxlength="17" formControlName="cdeao"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label floating>
           <ion-icon name="ios-card-outline" item-start class="text-primary"></ion-icon>
-          N° CDEAO
+          N° Electeur
         </ion-label>
-        <ion-input type="number" formControlName="cdeao"></ion-input>
+        <ion-input type="tel" maxlength="9" formControlName="electeur"></ion-input>
       </ion-item>
       <ion-item>
         <ion-buttons end="">
@@ -96,7 +96,7 @@
        </span>
           </button>
         </ion-buttons>
-         <p *ngIf="photo" align="center"><img [src]="photo" ></p>
+        <p  *ngIf="photo" align="center"><img [src]="photo" ></p>
       </ion-item>
 
       <ion-item>
@@ -104,7 +104,7 @@
           <ion-icon name="ios-planet" item-start class="text-primary"></ion-icon>
           Région
         </ion-label>
-        <ion-input type="text" formControlName="region" (click)="selectionRegion()" (focus)="selectionRegion()" readonly></ion-input>
+        <ion-input type="text" formControlName="region" (click)="selectionRegion()" (ionFocus)="selectionRegion()" readonly></ion-input>
       </ion-item>
       <span *ngIf="datauser.controls.region.valid">
       <ion-item>
@@ -112,7 +112,7 @@
           <ion-icon name="ios-planet" item-start class="text-primary"></ion-icon>
           Département
         </ion-label>
-        <ion-input type="text" formControlName="departement"  (focus)="selectionDepartement()" (click)="selectionDepartement()" readonly></ion-input>
+        <ion-input type="text" formControlName="departement"  (ionFocus)="selectionDepartement()" (click)="selectionDepartement()" readonly></ion-input>
       </ion-item>
       <span *ngIf="datauser.controls.departement.valid">
         <ion-item>
@@ -120,7 +120,7 @@
           <ion-icon name="ios-planet" item-start class="text-primary"></ion-icon>
           Commune
         </ion-label>
-        <ion-input type="text" formControlName="commune"  (focus)="selectionCommune()" (click)="selectionCommune()" readonly></ion-input>
+        <ion-input type="text" formControlName="commune"  (ionFocus)="selectionCommune()" (click)="selectionCommune()" readonly></ion-input>
         </ion-item>
       </span>
 

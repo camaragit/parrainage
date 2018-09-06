@@ -13,6 +13,8 @@ import {FilePath} from "@ionic-native/file-path";
 import { normalizeURL } from 'ionic-angular';
 //import {FileTransfer, FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer";
 import {FTP} from "@ionic-native/ftp";
+import {Base64} from "@ionic-native/base64";
+import {DomSanitizer} from "@angular/platform-browser";
 
 
 
@@ -25,7 +27,7 @@ export class RegisterPage {
 datauser : FormGroup;
 departementsRegion :any;
 communesdepartement :any;
-photo :string;
+photo :any;
 phoneinvalid : boolean = false;
 filepath : string;
 filename : string;
@@ -274,7 +276,7 @@ listesCommunes = [
 
 ];
 
-  constructor(public nav: NavController,private ftp:FTP,private file:File,private filePath: FilePath,private camera:Camera,private URL:GlobalVariableProvider,private api :ApiProvider,private formbuilder : FormBuilder,private selector:WheelSelector,private nfc :NFC,private store:Storage) {
+  constructor(private sanitizer: DomSanitizer,private base64: Base64,public nav: NavController,private ftp:FTP,private file:File,private filePath: FilePath,private camera:Camera,private URL:GlobalVariableProvider,private api :ApiProvider,private formbuilder : FormBuilder,private selector:WheelSelector,private nfc :NFC,private store:Storage) {
     let date = new Date();
     let datesuivant =date.setFullYear(date.getFullYear()- this.URL.Ageminimum);
     this.minDate = new Date(datesuivant).toISOString();
@@ -290,7 +292,7 @@ listesCommunes = [
     datenaissance:['',Validators.required],
     genre:['',Validators.required],
     region:['',Validators.required],
-    piece:['',Validators.required],
+    electeur:['',Validators.required],
     cdeao:['',Validators.required]
 
   });
@@ -321,7 +323,7 @@ listesCommunes = [
         .then((res: any) => {
 
 
-          this.ftp.upload(this.filepath,"/www/parti/ws/cni/"+this.filename).subscribe(data=>{
+          this.ftp.upload(this.filepath,"/www/parrainage/ws/cni/"+this.filename).subscribe(data=>{
             if(data ==1){
               this.register();
 
@@ -399,7 +401,7 @@ this.api.afficheloading();
             let datenaiss = this.formaterdate(this.datauser.controls['datenaissance'].value);
 
             let url = this.URL.URL+"serviceAjoutParrainage/?token="+token+"&idMentor="+idmentor+"&nfcid="+this.datauser.controls['idnfc'].value;
-            url += "&cni="+encodeURI(this.datauser.controls['piece'].value)+"&cdeao="+encodeURI(this.datauser.controls['cdeao'].value)+"&prenom="+encodeURI(this.datauser.controls['prenom'].value);
+            url += "&electeur="+encodeURI(this.datauser.controls['electeur'].value)+"&cdeao="+encodeURI(this.datauser.controls['cdeao'].value)+"&prenom="+encodeURI(this.datauser.controls['prenom'].value);
             url += "&nom="+encodeURI(this.datauser.controls['nom'].value)+"&telephone="+encodeURI(this.datauser.controls['telephone'].value);
             url += "&region="+encodeURI(this.datauser.controls['region'].value)+"&departement="+encodeURI(this.datauser.controls['departement'].value);
             url += "&commune="+encodeURI(this.datauser.controls['commune'].value)+"&genre="+this.datauser.controls['genre'].value;
@@ -497,7 +499,8 @@ this.api.afficheloading();
   }
   // go to login page
   logout() {
-    this.store.remove("user");
+    this.store.remove("token");
+    this.store.remove("idmentor");
     this.nav.setRoot(LoginPage);
   }
   hideselector(){
@@ -529,7 +532,7 @@ this.api.afficheloading();
         })
       }
       photographier(){
-    /*    if(this.datauser.controls['idnfc'].value==""){
+/*        if(this.datauser.controls['idnfc'].value==""){
           this.api.showError("Veuillez approchez votre carte d'abord!")
         }
         else {*/
@@ -548,23 +551,18 @@ this.api.afficheloading();
           };
 
           this.camera.getPicture(options).then((imageData) => {
-            // imageData is either a base64 encoded string or a file URI
-            // If it's base64 (DATA_URL):
-            //this.photo = 'data:image/jpeg;base64,' + imageData;
-            //alert(JSON.stringify(imageData))
-            //imageData = normalizeURL(imageData)
-            // this.photo =  imageData;
-             // this.photo =  normalizeURL(imageData);
-            console.log("BAYE DAME+++++"+imageData)
-            let t = normalizeURL(imageData);
-            this.photo = imageData;
 
+            this.base64.encodeFile(imageData).then((base64File: string) => {
 
-            // this.photo =  imageData.replace(/^file:\/\//, '');
-        //    console.log("Photo dame ===>"+this.photo);
+              let img= "data:image/png;base64,"+base64File.replace("data:image/*;charset=utf-8;base64,","");
+              this.photo = this.sanitizer.bypassSecurityTrustUrl(img);
+              console.log("Encodage===>"+JSON.stringify(base64File));
+              console.log("photo===>"+JSON.stringify(this.photo));
+            }, (err) => {
+              console.log("Erreur encodage==>"+JSON.stringify(err));
+            })
 
-            //   this.file.moveFile()
-    /*        this.filePath.resolveNativePath(imageData)
+            this.filePath.resolveNativePath(imageData)
               .then((path) => {
 
                 let imagePath = path.substr(0, path.lastIndexOf("/") + 1);
@@ -584,12 +582,12 @@ this.api.afficheloading();
               })
               .catch((err) => {
                 console.error(err);
-              })*/
+              })
 
           }, (err) => {
             console.log("une belle erreur dame "+JSON.stringify(err))
           });
-    //   }
+      // }
         }
 
 

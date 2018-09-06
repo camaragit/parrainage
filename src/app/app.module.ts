@@ -18,6 +18,7 @@ import {GlobalVariableProvider} from "../providers/gloabal-variable/gloabal-vari
 import {Pro} from "@ionic/pro";
 import {File} from "@ionic-native/file";
 import {FilePath} from "@ionic-native/file-path";
+import {Base64} from "@ionic-native/base64";
 
 Pro.init('d1ec8226', {
   appVersion: '0.0.1'
@@ -51,7 +52,12 @@ export class MyErrorHandler implements ErrorHandler {
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp), IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    IonicModule.forRoot(MyApp, {
+      scrollPadding: false,
+      scrollAssist: true,
+      autoFocusAssist: false
+    }),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -68,7 +74,7 @@ export class MyErrorHandler implements ErrorHandler {
     WheelSelector,
     NFC,Toast,Camera,FTP,File,FilePath,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    IonicErrorHandler,
+    IonicErrorHandler,Base64,
     [{ provide: ErrorHandler, useClass: MyErrorHandler }]
   ]
 })

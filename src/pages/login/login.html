@@ -25,9 +25,16 @@
           <ion-icon name="lock" item-start class="text-primary"></ion-icon>
           Mot de passe
         </ion-label>
-        <ion-input type="password" formControlName="password"></ion-input>
+        <ion-input [type]="type" formControlName="password"></ion-input>
       </ion-item>
-    </form>
+      <ion-buttons end=""  >
+
+        <button  ion-button icon-only icon-end small outline round  (click)="affichemdp()">
+      <span >
+        <ion-icon name="md-eye"></ion-icon>
+       </span>
+        </button>
+      </ion-buttons>    </form>
 
     <!--<p text-right ion-text color="secondary" tappable (click)="forgotPass()"><strong>Mot de passe oublié?</strong></p>-->
 

@@ -13,6 +13,7 @@ import {NFC} from "@ionic-native/nfc";
 })
 export class LoginPage {
   datalogin: FormGroup;
+  type :string="password";
   constructor(public nav: NavController,private nfc:NFC,private api:ApiProvider,private store:Storage,private Api:ApiProvider,private formBuilder : FormBuilder,private url :GlobalVariableProvider,public forgotCtrl: AlertController, public menu: MenuController, public toastCtrl: ToastController) {
     this.menu.swipeEnable(false);
     this.datalogin = this.formBuilder.group({
@@ -28,9 +29,8 @@ export class LoginPage {
   }
 
   login() {
-    this.nav.push(RegisterPage);
 
-    /*    this.nfc.enabled().then(ok=>{
+        this.nfc.enabled().then(ok=>{
 
           this.Api.afficheloading();
           this.Api.getpost(this.url.URL+"serviceAuthentification/?identifiant="+encodeURI(this.datalogin.controls['login'].value)+"&mdp="+encodeURI(this.datalogin.controls['password'].value))
@@ -58,45 +58,16 @@ export class LoginPage {
             this.api.showError("Cet appareil ne peut lire de carte ");
           else
             this.api.showError("Vous devez activer le lecteur de carte d'abord ");
-        })*/
+        })
 
   }
-  forgotPass() {
-    let forgot = this.forgotCtrl.create({
-      title: 'Forgot Password?',
-      message: "Enter you email address to send a reset link password.",
-      inputs: [
-        {
-          name: 'email',
-          placeholder: 'Email',
-          type: 'email'
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => {
-            console.log('Cancel clicked');
-          }
-        },
-        {
-          text: 'Send',
-          handler: data => {
-            console.log('Send clicked');
-            let toast = this.toastCtrl.create({
-              message: 'Email was sended successfully',
-              duration: 3000,
-              position: 'top',
-              cssClass: 'dark-trans',
-              closeButtonText: 'OK',
-              showCloseButton: true
-            });
-            toast.present();
-          }
-        }
-      ]
-    });
-    forgot.present();
-  }
+  affichemdp() {
+    this.type="text";
 
-}
+  /*  setTimeout(function () {
+     this.type ="password";
+    },5000);*/
+    setTimeout(() => {
+      this.type ="password";
+    }, 5000);
+}}
