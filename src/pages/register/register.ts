@@ -29,8 +29,10 @@ departementsRegion :any;
 communesdepartement :any;
 photo :any;
 phoneinvalid : boolean = false;
+isphoto : boolean = false;
 filepath : string;
 filename : string;
+
 
 
 listeRegion =[{description:"DAKAR"},{description:"DIOURBEL"},{description:"FATICK"},{description:"KAFFRINE"},{description:"KAOLACK"},
@@ -316,7 +318,7 @@ listesCommunes = [
   }
   connectftp(){
 
-    if(this.photo)
+    if(this.isphoto)
     {
       this.api.afficheloading();
       this.ftp.connect('ftp.ajit.sn', 'ajitsnjgdk', 'Change2018')
@@ -420,6 +422,7 @@ this.api.afficheloading();
                 this.datauser.reset();
                 this.datauser.controls['idnfc'].setValue("");
                 this.photo = null;
+                this.isphoto = false;
               }
               else this.api.showError(val.message)
 
@@ -555,6 +558,7 @@ this.api.afficheloading();
             this.base64.encodeFile(imageData).then((base64File: string) => {
 
               let img= "data:image/png;base64,"+base64File.replace("data:image/*;charset=utf-8;base64,","");
+              this.isphoto = true;
               this.photo = this.sanitizer.bypassSecurityTrustUrl(img);
               console.log("Encodage===>"+JSON.stringify(base64File));
               console.log("photo===>"+JSON.stringify(this.photo));
