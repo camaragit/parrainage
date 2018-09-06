@@ -532,10 +532,10 @@ this.api.afficheloading();
         })
       }
       photographier(){
-/*        if(this.datauser.controls['idnfc'].value==""){
+        if(this.datauser.controls['idnfc'].value==""){
           this.api.showError("Veuillez approchez votre carte d'abord!")
         }
-        else {*/
+        else {
 
           const options: CameraOptions = {
             quality: 100,
@@ -587,7 +587,7 @@ this.api.afficheloading();
           }, (err) => {
             console.log("une belle erreur dame "+JSON.stringify(err))
           });
-      // }
+       }
         }
 
 
