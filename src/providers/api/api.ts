@@ -44,6 +44,7 @@ export class ApiProvider {
     let alert = this.alertCtrl.create({
       title: 'AJIT',
       subTitle: message,
+      cssClass:'alertSucces',
       buttons: ['OK']
     });
     alert.present();
