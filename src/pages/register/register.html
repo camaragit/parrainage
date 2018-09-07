@@ -90,13 +90,24 @@
       <ion-item>
         <ion-buttons end="">
 
-          <button  ion-button icon-end style="text-transform: none" (click)="photographier()">
-      <span >Prendre une photo
+          <button  ion-button icon-end style="text-transform: none" (click)="photographierRecto()">
+      <span >Prendre recto carte
         <ion-icon name="ios-camera-outline"></ion-icon>
        </span>
           </button>
         </ion-buttons>
-        <p  *ngIf="photo" align="center"><img [src]="photo" ></p>
+        <p  *ngIf="recto" align="center"><img [src]="recto" ></p>
+      </ion-item>
+      <ion-item>
+        <ion-buttons end="">
+
+          <button  ion-button icon-end style="text-transform: none" (click)="photographierverso()">
+      <span >Prendre verso carte
+        <ion-icon name="ios-camera-outline"></ion-icon>
+       </span>
+          </button>
+        </ion-buttons>
+        <p  *ngIf="verso" align="center"><img [src]="verso" ></p>
       </ion-item>
 
       <ion-item>

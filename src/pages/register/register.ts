@@ -27,10 +27,12 @@ export class RegisterPage {
 datauser : FormGroup;
 departementsRegion :any;
 communesdepartement :any;
-photo :any;
+recto :any;
+verso :any;
 phoneinvalid : boolean = false;
 isphoto : boolean = false;
-filepath : string;
+filepathrecto : string;
+filepathverso : string;
 filename : string;
 
 
@@ -308,7 +310,7 @@ listesCommunes = [
       this.api.showToast("L'id de la carte est recuperé avec succès .")
       this.datauser.controls['idnfc'].setValue(event.tag.id);
       this.datauser.controls['timestamp'].setValue(Date.now());
-      this.filename = this.datauser.controls['idnfc'].value+"_"+this.datauser.controls['timestamp'].value+".png";
+      this.filename = this.datauser.controls['idnfc'].value+"_"+this.datauser.controls['timestamp'].value+"_";
 
 
 
@@ -325,9 +327,13 @@ listesCommunes = [
         .then((res: any) => {
 
 
-          this.ftp.upload(this.filepath,"/www/parrainage/ws/cni/"+this.filename).subscribe(data=>{
+          this.ftp.upload(this.filepathrecto,"/www/parrainage/ws/cni/"+this.filename+"recto.png").subscribe(data=>{
             if(data ==1){
-              this.register();
+              this.ftp.upload(this.filepathverso,"/www/parrainage/ws/cni/"+this.filename+"verso.png").subscribe(data=>{
+                if(data==1)
+                  this.register()
+              })
+              ;
 
             }
           },error => {
@@ -421,7 +427,7 @@ this.api.afficheloading();
                 this.api.showAlert(val.message);
                 this.datauser.reset();
                 this.datauser.controls['idnfc'].setValue("");
-                this.photo = null;
+                this.recto = null;
                 this.isphoto = false;
               }
               else this.api.showError(val.message)
@@ -534,7 +540,7 @@ this.api.afficheloading();
 
         })
       }
-      photographier(){
+      photographierRecto(){
         if(this.datauser.controls['idnfc'].value==""){
           this.api.showError("Veuillez approchez votre carte d'abord!")
         }
@@ -559,9 +565,9 @@ this.api.afficheloading();
 
               let img= "data:image/png;base64,"+base64File.replace("data:image/*;charset=utf-8;base64,","");
               this.isphoto = true;
-              this.photo = this.sanitizer.bypassSecurityTrustUrl(img);
+              this.recto = this.sanitizer.bypassSecurityTrustUrl(img);
               console.log("Encodage===>"+JSON.stringify(base64File));
-              console.log("photo===>"+JSON.stringify(this.photo));
+              console.log("photo===>"+JSON.stringify(this.recto));
             }, (err) => {
               console.log("Erreur encodage==>"+JSON.stringify(err));
             })
@@ -571,7 +577,7 @@ this.api.afficheloading();
 
                 let imagePath = path.substr(0, path.lastIndexOf("/") + 1);
                 let imageName = path.substring(path.lastIndexOf("/") + 1, path.length);
-                this.filepath = imagePath+""+this.filename;
+                this.filepathrecto = imagePath+""+this.filename+"recto.png";
 
                 this.file.moveFile(imagePath, imageName, imagePath, this.filename)
                   .then(newFile => {
@@ -593,6 +599,65 @@ this.api.afficheloading();
           });
        }
         }
+  photographierverso(){
+    if(this.datauser.controls['idnfc'].value==""){
+      this.api.showError("Veuillez approchez votre carte d'abord!")
+    }
+    else {
+
+      const options: CameraOptions = {
+        quality: 100,
+        destinationType: this.camera.DestinationType.FILE_URI,
+        encodingType: this.camera.EncodingType.PNG,
+        targetWidth : 180,
+        targetHeight : 100,
+
+        correctOrientation:true,
+        allowEdit :true,
+        mediaType: this.camera.MediaType.PICTURE,
+
+      };
+
+      this.camera.getPicture(options).then((imageData) => {
+
+        this.base64.encodeFile(imageData).then((base64File: string) => {
+
+          let img= "data:image/png;base64,"+base64File.replace("data:image/*;charset=utf-8;base64,","");
+          this.isphoto = true;
+          this.verso = this.sanitizer.bypassSecurityTrustUrl(img);
+          console.log("Encodage===>"+JSON.stringify(base64File));
+          console.log("photo===>"+JSON.stringify(this.recto));
+        }, (err) => {
+          console.log("Erreur encodage==>"+JSON.stringify(err));
+        })
+
+        this.filePath.resolveNativePath(imageData)
+          .then((path) => {
+
+            let imagePath = path.substr(0, path.lastIndexOf("/") + 1);
+            let imageName = path.substring(path.lastIndexOf("/") + 1, path.length);
+            this.filepathverso = imagePath+""+this.filename+"verso.png";
+
+            this.file.moveFile(imagePath, imageName, imagePath, this.filename)
+              .then(newFile => {
+                //this.photo = newFile;
+                // this.filepath = newFile.nativeURL;
+
+                //console.log(newFile);
+              })
+              .catch(err => {
+                console.error(err);
+              })
+          })
+          .catch((err) => {
+            console.error(err);
+          })
+
+      }, (err) => {
+        console.log("une belle erreur dame "+JSON.stringify(err))
+      });
+    }
+  }
 
 
 }
