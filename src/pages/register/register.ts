@@ -579,7 +579,7 @@ this.api.afficheloading();
                 let imageName = path.substring(path.lastIndexOf("/") + 1, path.length);
                 this.filepathrecto = imagePath+""+this.filename+"recto.png";
 
-                this.file.moveFile(imagePath, imageName, imagePath, this.filename)
+                this.file.moveFile(imagePath, imageName, imagePath, this.filename+"recto.png")
                   .then(newFile => {
                        //this.photo = newFile;
                    // this.filepath = newFile.nativeURL;
@@ -638,7 +638,7 @@ this.api.afficheloading();
             let imageName = path.substring(path.lastIndexOf("/") + 1, path.length);
             this.filepathverso = imagePath+""+this.filename+"verso.png";
 
-            this.file.moveFile(imagePath, imageName, imagePath, this.filename)
+            this.file.moveFile(imagePath, imageName, imagePath, this.filename+"verso.png")
               .then(newFile => {
                 //this.photo = newFile;
                 // this.filepath = newFile.nativeURL;
