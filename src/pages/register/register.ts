@@ -428,6 +428,7 @@ this.api.afficheloading();
                 this.datauser.reset();
                 this.datauser.controls['idnfc'].setValue("");
                 this.recto = null;
+                this.verso = null;
                 this.isphoto = false;
               }
               else this.api.showError(val.message)
