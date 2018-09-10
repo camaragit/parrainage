@@ -15,6 +15,7 @@ import { normalizeURL } from 'ionic-angular';
 import {FTP} from "@ionic-native/ftp";
 import {Base64} from "@ionic-native/base64";
 import {DomSanitizer} from "@angular/platform-browser";
+import {SMS} from "@ionic-native/sms";
 
 
 
@@ -34,8 +35,7 @@ isphoto : boolean = false;
 filepathrecto : string;
 filepathverso : string;
 filename : string;
-
-
+idcommune :number;
 
 listeRegion =[{description:"DAKAR"},{description:"DIOURBEL"},{description:"FATICK"},{description:"KAFFRINE"},{description:"KAOLACK"},
                 {description :"KEDOUGOU"},{description:"KOLDA"},{description:"LOUGA"},{description:"MATAM"},{description:"SAINT LOUIS"},
@@ -70,9 +70,8 @@ listesCommunes = [
     ],
   [{description:"WAKHINANE NIMZAT"},{description:"GOLF"},{description:"MEDINA GOUNASS"},{description:"NDIAREME"},{description:"SAM NOTAIRE"}
     ],
-
   [
-    {description:"RUFISQUE EST"},{description:"RUFISQUE NORD"},{description:"RUFISQUE OUEST"},{description:"BAMBYLOR"}, {description:" TIVAOUANE PEULH - NIAGA"},
+    {description:"RUFISQUE EST"},{description:"RUFISQUE NORD"},{description:"RUFISQUE OUEST"},{description:"BAMBYLOR"}, {description:"TIVAOUANE PEULH - NIAGA"},
     {description:"YENE"},{description:"BARGNY"},{description:"DIAMNIADIO"},{description:"JAXAAY NIAKHOURAB"}, {description:"SANGALKAM"},
     {description:"SEBIKOTANE"},{description:"SENDOU"}
 
@@ -120,7 +119,7 @@ listesCommunes = [
     ],
 
     [
-    {description:"KAFFRINE"},{description:"NGANDA"},{description:"BOULEL"},{description:"DIAMAGADIO"}, {description:"DIOKOUL MBELBOUCK"}, {description:"PATAR LIA"},
+    {description:"KAFFRINE"},{description:"NGANDA"},{description:"BOULEL"},{description:"DIAMAGADIO"}, {description:"DIOKOUL MBELBOUCK"},
     {description:"GNIBY"},{description:"KAHI"},{description:"KATHIOTE"},{description:"MEDINATOUL SALAM 2"}
     ],
     [
@@ -131,15 +130,15 @@ listesCommunes = [
     {description:"MALEM HODAR"},{description:"DAROU MINAM"},{description:"DJANKE SOUF"},{description:"KHELCOM"}, {description:"NDIOBENE SAMBA LAMO"}, {description:"NDIOUM NGAINTHE"}, {description:"SAGNA"}
     ],
     [
-    {description:"KOUNGHEUL"},{description:"FASS THIEKENE"},{description:"IDA MOURIDE"},{description:"LOUR ESCALE"}, {description:"MAKA YOP"}, {description:"NDIOUM"}, {description:"NGAINTHE PATE"},
-    {description:"RIBOT ESCALE"},{description:"SALY ESCALE"}
+    {description:"KOUNGHEUL"},{description:"FASS THIEKENE"},{description:"IDA MOURIDE"},{description:"LOUR ESCALE"}, {description:"MAKA YOP"},
+      {description:"MISSIRAH WADENE"},{description:"NGAINTHE PATE"},{description:"RIBOT ESCALE"},{description:"SALY ESCALE"}
     ],
     [
     {description:"KAOLACK"},{description:"KAHONE"},{description:"GANDIAYE"},{description:"NDOFFANE"}, {description:"SIBASSOR"}, {description:"DYA"}, {description:"KEUR BAKA"},
     {description:"KEUR SOCE"},{description:"LATMINGUE"},{description:"NDIAFFATE"},{description:"NDIEBEL"},{description:"NDIEDIENG"},{description:"THIARE"},{description:"THIOMBY"}
     ],
     [
-    {description:"GUINGUINEO"},{description:"FASS"},{description:"MBOSS"},{description:"DARA MBOSS"}, {description:"KHELCOM BIRAME"}, {description:"NDIAGO"}, {description:"NGAGNICK"},
+    {description:"GUINGUINEO"},{description:"FASS"},{description:"MBOSS"},{description:"DARA MBOSS"},{description:"KHELCOM BIRAME"},{description:"MBADAKHOUNE"}, {description:"NDIAGO"}, {description:"NGAGNICK"},
     {description:"NGATHIE NAOUDE"},{description:"NGELLOU"},{description:"OUROUR"},{description:"PANAL WOLOF"}
     ],
     [
@@ -171,7 +170,7 @@ listesCommunes = [
     ],
     [
     {description:"LOUGA"},{description:"NDIAGNE"},{description:"GANDE"},{description:"GUET ARDO"}, {description:"KELLE GUEYE"}, {description:"KEUR MOMAR SARR"},
-    {description:"KOKI"},{description:"LEONA"},{description:"NGUER MALAL"},{description:"NGUEUNE SARR"},{description:"NGUIDILE"},{description:"NIOMRE"},
+    {description:"KOKI"},{description:"LEONA"},{description:"MBEDIENE"},{description:"NGUER MALAL"},{description:"NGUEUNE SARR"},{description:"NGUIDILE"},{description:"NIOMRE"},
       {description:"PETE OUARACK"},{description:"SAKAL"},{description:"SYER"},{description:"THIAMENE CAYOR"}
     ],
     [
@@ -182,7 +181,7 @@ listesCommunes = [
     ],
     [
     {description:"KEBEMER"},{description:"GUEOUL"},{description:"BANDEGNE OUOLOF"},{description:"DAROU MARNANE"}, {description:"DAROU MOUSTI"}, {description:"DIOKOUL NDIAWRIGNE"},
-    {description:"DIOKOUL NDIAWRIGNE"},{description:"KAB GAYE"},{description:"KANENE NDIOB"},{description:"LORO"},{description:"MBACKE CAJOR"},{description:"MBADIANE"},
+    {description:"KAB GAYE"},{description:"KANENE NDIOB"},{description:"LORO"},{description:"MBACKE CAJOR"},{description:"MBADIANE"},
       {description:"NDANDE"},{description:"NDOYENE"},{description:"NGOURANE OUOLOF"},{description:"SAGATA GUETH"},
       {description:"SAM YABAL"},{description:"THIEP"},{description:"THIOLOM FALL"},{description:"TOUBA MERINA"}
     ],
@@ -211,16 +210,17 @@ listesCommunes = [
     [
     {description:"DAGANA"},{description:"GAE"},{description:"NDOMBO SANDJIRY"},{description:"RICHARD TOLL"},{description:"ROSS BETHIO"},
     {description:"ROSSO SENEGAL"},{description:"BOKHOL"},{description:"DIAMA"},{description:"GNITH"},{description:"MBANE"},
-    {description:"PETE"},{description:"GAMADJI SARE"},{description:"GUEDE VILLAGE"},{description:"DODEL"},{description:"DOUMGA LAO"},
-    {description:"RONKH"}
+     {description:"RONKH"}
     ],
     [
     {description:"SEDHIOU"},{description:"MARSSASSOUM"},{description:"DIANAH MALARY"},{description:"SANSAMBA"},{description:"SAME KANTA PEULH"},
     {description:"SAKAR"},{description:"OUDOUCAR"},{description:"KOUSSY"},{description:"DJIREDJI"},{description:"DJIBABOUYA"},
     {description:"DIENDE"},{description:"DIANNAH BA"},{description:"BEMET BIDJINI"},{description:"BAMBALI"}
     ],
+
     [
     {description:"BOUNKILING"},{description:"MADINA WANDIFA"},{description:"NDIAMACOUTA"},{description:"BOGHAL"},{description:"BONA"},
+      {description:"DIACOUNDA"},{description:"DIAMBATY"}, {description:"DIAROUME"},{description:"DJINANY"},{description:"FAOUNE"},
     {description:"INOR"},{description:"KANDION MANGANA"},{description:"NDIAMALATHIEL"},{description:"TANKON"}
     ],
     [
@@ -234,7 +234,7 @@ listesCommunes = [
     ],
     [
     {description:"BAKEL"},{description:"DIAWARA"},{description:"KIDIRA"},{description:"BALLOU"},{description:"BELE"},
-    {description:"GABOU"},{description:"GATHIARI"},{description:"MOUDERI"},{description:"SADATOU"},{description:"SINTHIOU FISSA"},{description:"TOUMBOURA"}
+    {description:"GABOU"},{description:"GATHIARI"},{description:"MADINA FOULBE"},{description:"MOUDERI"},{description:"SADATOU"},{description:"SINTHIOU FISSA"},{description:"TOUMBOURA"}
     ],
     [
     {description:"KOUMPENTOUM"},{description:"MALEME NIANI"},{description:"BAMBA THIALENE"},{description:"KAHENE"},{description:"KOUTHIA GAYDI"},
@@ -262,7 +262,7 @@ listesCommunes = [
     {description:"MECKHE"},{description:"TIVAOUANE"}
     ],
     [
-    {description:"ZIGUINCHOR"},{description:"ADEANE"},{description:"BOUTOUPA CAMARACOUND"},{description:"ENAMPOR"},{description:"NIAGUIS"},
+    {description:"ZIGUINCHOR"},{description:"ADEANE"},{description:"BOUTOUPA CAMARACOUNDA"},{description:"ENAMPOR"},{description:"NIAGUIS"},
     {description:"NIASSIA"}
     ],
     [
@@ -280,7 +280,9 @@ listesCommunes = [
 
 ];
 
-  constructor(private sanitizer: DomSanitizer,private base64: Base64,public nav: NavController,private ftp:FTP,private file:File,private filePath: FilePath,private camera:Camera,private URL:GlobalVariableProvider,private api :ApiProvider,private formbuilder : FormBuilder,private selector:WheelSelector,private nfc :NFC,private store:Storage) {
+  constructor(private sms:SMS,private sanitizer: DomSanitizer,private base64: Base64,public nav: NavController,private ftp:FTP,private file:File,private filePath: FilePath,private camera:Camera,private URL:GlobalVariableProvider,private api :ApiProvider,private formbuilder : FormBuilder,private selector:WheelSelector,private nfc :NFC,private store:Storage) {
+
+
     let date = new Date();
     let datesuivant =date.setFullYear(date.getFullYear()- this.URL.Ageminimum);
     this.minDate = new Date(datesuivant).toISOString();
@@ -300,6 +302,7 @@ listesCommunes = [
     cdeao:['',Validators.required]
 
   });
+  console.log("Taille communes "+this.listesCommunes.length)
 
     this.nfc.addTagDiscoveredListener(() => {
     }, (err) => {
@@ -320,35 +323,60 @@ listesCommunes = [
   }
   connectftp(){
 
-    if(this.isphoto)
+    if(this.URL.mode!='sms')
     {
-      this.api.afficheloading();
-      this.ftp.connect('ftp.ajit.sn', 'ajitsnjgdk', 'Change2018')
-        .then((res: any) => {
+      if(this.isphoto)
+      {
+        this.api.afficheloading();
+        this.ftp.connect('ftp.ajit.sn', 'ajitsnjgdk', 'Change2018')
+          .then((res: any) => {
 
 
-          this.ftp.upload(this.filepathrecto,"/www/parrainage/ws/cni/"+this.filename+"recto.png").subscribe(data=>{
-            if(data ==1){
-              this.ftp.upload(this.filepathverso,"/www/parrainage/ws/cni/"+this.filename+"verso.png").subscribe(data=>{
-                if(data==1)
-                  this.register()
-              })
-              ;
+            this.ftp.upload(this.filepathrecto,"/www/parrainage/ws/cni/"+this.filename+"recto.png").subscribe(data=>{
+              if(data ==1){
+                this.ftp.upload(this.filepathverso,"/www/parrainage/ws/cni/"+this.filename+"verso.png").subscribe(data=>{
+                  if(data==1)
+                    this.register()
+                })
+                ;
 
-            }
-          },error => {
-            this.api.dismissloadin();
-            this.api.showError("Impossible d'envoyer l'image "+JSON.stringify(error))
+              }
+            },error => {
+              this.api.dismissloadin();
+              this.api.showError("Impossible d'envoyer l'image "+JSON.stringify(error))
+            })
           })
-        })
-        .catch((error: any) =>{
-          this.api.dismissloadin();
-          this.api.showError('Impossible de se connecter au serveur ftp '+JSON.stringify(error) );
-        });
+          .catch((error: any) =>{
+            this.api.dismissloadin();
+            this.api.showError('Impossible de se connecter au serveur ftp '+JSON.stringify(error) );
+          });
+      }
+      else{
+        this.api.showError("Veuillez prendre en photo l'inscrit")
+      }
     }
     else{
-      this.api.showError("Veuillez prendre en photo l'inscrit")
+     // let msg ="parrain|Dame|Camara|01-01-2001|h|775067661|123456789012|12345678987654321|098765432|234";
+      let datenaiss = this.formaterdate(this.datauser.controls['datenaissance'].value);
+      let msg ="parrain|"+this.datauser.controls['prenom'].value+"|"+this.datauser.controls['nom'].value+"|"+datenaiss+"|";
+      msg+= this.datauser.controls['genre'].value+"|"+this.datauser.controls['telephone'].value+"|";
+      msg+= this.datauser.controls['idnfc'].value+"|"+this.datauser.controls['cdeao'].value+"|";
+      msg+= this.datauser.controls['electeur'].value+"|"+this.idcommune
+      console.log("Message "+msg);
+      this.api.afficheloading();
+      this.sms.send('766026389', msg);
+
+      setTimeout(() => {
+       this.api.dismissloadin();
+        this.api.showAlert("Parrain "+this.datauser.controls['prenom'].value+" "+this.datauser.controls['nom'].value+" est inscrit avec succés");
+        this.datauser.reset();
+        this.datauser.controls['idnfc'].setValue("");
+        this.recto = null;
+        this.verso = null;
+        this.isphoto = false;
+      }, 3000);
     }
+
 
 
   }
@@ -501,11 +529,36 @@ this.api.afficheloading();
       ],
     }).then(
       result => {
-        this.datauser.controls['commune'].setValue(result[0].description)
+        this.datauser.controls['commune'].setValue(result[0].description);
+        this.recuperIdCommune();
       }).catch(err=>{
 
 
     })
+  }
+  recuperIdCommune(){
+  console.log('recuperIdCommune+++>JE SUIS APPELE')
+    let i:number=0;
+    let  id:number= 1;
+    console.log("Taille commune "+this.listesCommunes.length)
+    console.log("Taille commune "+this.listesCommunes[1])
+
+    while (i<this.listesCommunes.length)
+    {
+      console.log("Mon i vaut "+i)
+      let j:number=0;
+
+      while(j<this.listesCommunes[i].length && this.datauser.controls['commune'].value!=this.listesCommunes[i][j].description)
+      {
+
+        j++;
+        id++;
+      }
+      if(j<this.listesCommunes[i].length )
+        break;
+      i++;
+    }
+    this.idcommune = id;
   }
   // go to login page
   logout() {

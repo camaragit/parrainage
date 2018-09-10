@@ -1,0 +1,17 @@
+{
+  "name": "SMSPLUGINDAME",
+  "version": "0.0.1",
+  "description": "",
+  "cordova": {
+    "id": "cordova.plugin.sms.port.dame",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "DAME CAMARA",
+  "license": "ISC"
+}

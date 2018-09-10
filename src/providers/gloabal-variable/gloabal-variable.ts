@@ -6,5 +6,6 @@ export class  GlobalVariableProvider {
   public URL ="http://ajit.sn/parti/ws/";*/
   public URL ="http://ajit.sn/parrainage/ws/";
   public Ageminimum = 18;
+  mode="internet";
 
 }

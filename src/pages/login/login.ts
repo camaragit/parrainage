@@ -1,20 +1,24 @@
 import {Component} from "@angular/core";
-import {NavController, AlertController, ToastController, MenuController} from "ionic-angular";
+import {NavController, AlertController, ToastController, MenuController, Platform} from "ionic-angular";
 import {RegisterPage} from "../register/register";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ApiProvider} from "../../providers/api/api";
 import {GlobalVariableProvider} from "../../providers/gloabal-variable/gloabal-variable";
 import {Storage} from "@ionic/storage";
 import {NFC} from "@ionic-native/nfc";
-
+//import {SMS} from "../../providers/sms/sms";
+import {SMS} from "@ionic-native/sms";
+declare var cordova: any;
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html'
 })
 export class LoginPage {
   datalogin: FormGroup;
+  smsmode: boolean=false ;
   type :string="password";
-  constructor(public nav: NavController,private nfc:NFC,private api:ApiProvider,private store:Storage,private Api:ApiProvider,private formBuilder : FormBuilder,private url :GlobalVariableProvider,public forgotCtrl: AlertController, public menu: MenuController, public toastCtrl: ToastController) {
+  internet:boolean =true;
+  constructor(private sms:SMS,private platform:Platform,public nav: NavController,private nfc:NFC,private api:ApiProvider,private store:Storage,private Api:ApiProvider,private formBuilder : FormBuilder,private url :GlobalVariableProvider,public forgotCtrl: AlertController, public menu: MenuController, public toastCtrl: ToastController) {
     this.menu.swipeEnable(false);
     this.datalogin = this.formBuilder.group({
       login: ['', Validators.required],
@@ -60,6 +64,34 @@ export class LoginPage {
             this.api.showError("Vous devez activer le lecteur de carte d'abord ");
         })
 
+  }
+  tester(message){
+    //766026389
+    let msg ="parrain|Dame|Camara|01-01-2001|h|775067661|123456789012|12345678987654321|098765432|234";
+    this.sms.send('766026389', msg);
+/*    this.platform.ready().then(() => {
+    //  cordova.plugins.SMSPLUGINDAME.coolMethod(message);
+      this.sms.coolMethod(message);
+    });
+   // this.sms.coolMethod(message);*/
+
+  }
+  changeModeSms(){
+    this.internet = !this.smsmode;
+    if(this.smsmode)
+    {
+      this.url.mode='sms';
+      this.nav.setRoot(RegisterPage);
+    }
+
+  }
+  changeModeinternet(){
+    this.smsmode = !this.internet;
+    if(this.smsmode)
+    {
+      this.url.mode='sms';
+      this.nav.setRoot(RegisterPage);
+    }
   }
   affichemdp() {
     this.type="text";

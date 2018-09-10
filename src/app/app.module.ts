@@ -19,6 +19,7 @@ import {Pro} from "@ionic/pro";
 import {File} from "@ionic-native/file";
 import {FilePath} from "@ionic-native/file-path";
 import {Base64} from "@ionic-native/base64";
+import {SMS} from "@ionic-native/sms";
 
 Pro.init('d1ec8226', {
   appVersion: '0.0.1'
@@ -75,7 +76,8 @@ export class MyErrorHandler implements ErrorHandler {
     NFC,Toast,Camera,FTP,File,FilePath,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     IonicErrorHandler,Base64,
-    [{ provide: ErrorHandler, useClass: MyErrorHandler }]
+    [{ provide: ErrorHandler, useClass: MyErrorHandler }],
+    SMS
   ]
 })
 export class AppModule {}

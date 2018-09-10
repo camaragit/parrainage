@@ -1,0 +1,17 @@
+{
+  "name": "SMSDAME",
+  "version": "0.0.1",
+  "description": "Plugin Permettant d'envoyer et de recevoir un sms via un port",
+  "cordova": {
+    "id": "cordova-plugin-sms-port-dame",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "Dame CAMARA",
+  "license": "ISC"
+}
