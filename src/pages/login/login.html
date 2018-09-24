@@ -14,12 +14,12 @@
         <legend>Type de connexion</legend>
         <ion-item no-lines="">
           <ion-icon name="ios-wifi-outline" item-left></ion-icon>
-          <ion-label>Internet</ion-label>
+          <ion-label>Online</ion-label>
           <ion-toggle [(ngModel)]="internet" (ionChange)="changeModeinternet()" ></ion-toggle>
         </ion-item>
         <ion-item no-lines="">
           <ion-icon name="ios-mail-outline" item-left></ion-icon>
-          <ion-label>SMS</ion-label>
+          <ion-label>Offline</ion-label>
           <ion-toggle [(ngModel)]="smsmode" (ionChange)="changeModeSms()" ></ion-toggle>
         </ion-item>
         {{ mode }}

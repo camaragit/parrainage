@@ -284,7 +284,7 @@ listesCommunes = [
 
 
     let date = new Date();
-    let datesuivant =date.setFullYear(date.getFullYear()- this.URL.Ageminimum);
+    let datesuivant =date.setFullYear(date.getFullYear() - this.URL.Ageminimum);
     this.minDate = new Date(datesuivant).toISOString();
 
   this.datauser = this.formbuilder.group({
@@ -469,12 +469,12 @@ this.api.afficheloading();
           }
 
         }).catch(err=>{
-          this.api.showError("Impossible de recuperer le idmentor "+JSON.stringify(err));
+          this.api.showError("Impossible de recuperer le idmentor ");
         })
 
       }
     }).catch(err=>{
-      this.api.showError("Impossible de recuperer le token "+JSON.stringify(err));
+      this.api.showError("Impossible de recuperer le token ");
     })
 
   }
