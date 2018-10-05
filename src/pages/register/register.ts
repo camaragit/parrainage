@@ -400,8 +400,9 @@ listesCommunes = [
                 this.api.showAlert("Parrain "+this.datauser.controls['prenom'].value+" "+this.datauser.controls['nom'].value+" est inscrit avec succés");
                 this.datauser.reset();
                 this.datauser.controls['idnfc'].setValue("");
-                this.recto = null;
-                this.verso = null;
+                this.recto = "";
+                this.verso = "";
+                this.showForm = false;
                 this.isphoto = false;
               }, 3000);
             }
