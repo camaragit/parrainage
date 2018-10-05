@@ -672,8 +672,8 @@ this.api.afficheloading();
             destinationType: this.camera.DestinationType.FILE_URI,
            // encodingType: this.camera.EncodingType.PNG,
             encodingType: this.camera.EncodingType.JPEG,
-           // targetWidth : 180,
-           // targetHeight : 100,
+            targetWidth : 180,
+            targetHeight : 100,
 
             correctOrientation:true,
             allowEdit :true,
@@ -733,8 +733,8 @@ this.api.afficheloading();
         destinationType: this.camera.DestinationType.FILE_URI,
        // encodingType: this.camera.EncodingType.PNG,
         encodingType: this.camera.EncodingType.JPEG,
-       // targetWidth : 180,
-      //  targetHeight : 100,
+        targetWidth : 180,
+        targetHeight : 100,
 
         correctOrientation:true,
         allowEdit :true,
