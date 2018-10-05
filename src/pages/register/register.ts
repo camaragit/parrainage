@@ -398,12 +398,13 @@ listesCommunes = [
               setTimeout(() => {
                 this.api.dismissloadin();
                 this.api.showAlert("Parrain "+this.datauser.controls['prenom'].value+" "+this.datauser.controls['nom'].value+" est inscrit avec succés");
-                this.datauser.reset();
+
                 this.datauser.controls['idnfc'].setValue("");
                 this.recto = "";
                 this.verso = "";
                 this.showForm = false;
                 this.isphoto = false;
+                this.datauser.reset();
               }, 3000);
             }
 
@@ -505,13 +506,14 @@ this.api.afficheloading();
               let val = JSON.parse(data.data);
               if(val.code=="0")
               {
+                this.recto = "";
+                this.verso = "";
+                this.isphoto = false;
+                this.showForm=false;
                 this.api.showAlert(val.message);
                 this.datauser.reset();
                 this.datauser.controls['idnfc'].setValue("");
-                this.recto = null;
-                this.verso = null;
-                this.isphoto = false;
-                this.showForm=false;
+
               }
               else this.api.showError(val.message)
 
@@ -673,8 +675,8 @@ this.api.afficheloading();
             destinationType: this.camera.DestinationType.FILE_URI,
            // encodingType: this.camera.EncodingType.PNG,
             encodingType: this.camera.EncodingType.JPEG,
-            targetWidth : 180,
-            targetHeight : 100,
+            targetWidth : 360,
+            targetHeight : 200,
 
             correctOrientation:true,
             allowEdit :true,
@@ -734,8 +736,8 @@ this.api.afficheloading();
         destinationType: this.camera.DestinationType.FILE_URI,
        // encodingType: this.camera.EncodingType.PNG,
         encodingType: this.camera.EncodingType.JPEG,
-        targetWidth : 180,
-        targetHeight : 100,
+        targetWidth : 360,
+        targetHeight : 200,
 
         correctOrientation:true,
         allowEdit :true,
