@@ -33,8 +33,8 @@ export class LoginPage {
   }
 
   login() {
-    this.nav.push(RegisterPage,{mode:"Online"});
-    /*    this.nfc.enabled().then(ok=>{
+    //this.nav.push(RegisterPage,{mode:"Online"});
+        this.nfc.enabled().then(ok=>{
 
           this.Api.afficheloading();
           this.Api.getpost(this.url.URL+"serviceAuthentification/?identifiant="+encodeURI(this.datalogin.controls['login'].value)+"&mdp="+encodeURI(this.datalogin.controls['password'].value))
@@ -63,7 +63,6 @@ export class LoginPage {
           else
             this.api.showError("Vous devez activer le lecteur de carte d'abord ");
         })
-*/
   }
   tester(message){
     //766026389
