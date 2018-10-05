@@ -33,7 +33,6 @@ export class LoginPage {
   }
 
   login() {
-    //this.nav.push(RegisterPage,{mode:"Online"});
         this.nfc.enabled().then(ok=>{
 
           this.Api.afficheloading();
