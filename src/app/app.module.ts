@@ -57,11 +57,12 @@ export class MyErrorHandler implements ErrorHandler {
     IonicModule.forRoot(MyApp, {
       scrollPadding: false,
       scrollAssist: true,
-      autoFocusAssist: false
-    }),
-    IonicModule.forRoot(MyApp,{monthNames: ['Janvier', 'Février', 'Mars','Avril','Mai','Juin','Juillet',
+      autoFocusAssist: false,
+      monthNames: ['Janvier', 'Février', 'Mars','Avril','Mai','Juin','Juillet',
         'Août','Septembre','Octobre','Novembre','Décembre' ],
-      dayNames: ['Dimanche', 'Lundi', 'Mardi','Mercredi','Jeudi','Vendredi','Samedi' ]}),
+      dayNames: ['Dimanche', 'Lundi', 'Mardi','Mercredi','Jeudi','Vendredi','Samedi' ]
+    }),
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [

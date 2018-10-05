@@ -29,12 +29,12 @@ export class LoginPage {
 
   // go to register page
   register() {
-    this.nav.setRoot(RegisterPage);
+    this.nav.setRoot(RegisterPage,{mode:"Online"});
   }
 
   login() {
-
-        this.nfc.enabled().then(ok=>{
+    this.nav.push(RegisterPage,{mode:"Online"});
+    /*    this.nfc.enabled().then(ok=>{
 
           this.Api.afficheloading();
           this.Api.getpost(this.url.URL+"serviceAuthentification/?identifiant="+encodeURI(this.datalogin.controls['login'].value)+"&mdp="+encodeURI(this.datalogin.controls['password'].value))
@@ -50,7 +50,7 @@ export class LoginPage {
                 this.datalogin.controls['password'].setValue("");
                 this.store.set("token",val.token);
                 this.store.set("idmentor",val.idMentor);
-                this.nav.push(RegisterPage);
+                this.nav.push(RegisterPage,{mode:"Online"});
               }
               else this.Api.showError(val.message);
             }).catch(err=>{
@@ -63,7 +63,7 @@ export class LoginPage {
           else
             this.api.showError("Vous devez activer le lecteur de carte d'abord ");
         })
-
+*/
   }
   tester(message){
     //766026389
@@ -81,7 +81,7 @@ export class LoginPage {
     if(this.smsmode)
     {
       this.url.mode='sms';
-      this.nav.setRoot(RegisterPage);
+      this.nav.setRoot(RegisterPage,{mode:"Offline"});
     }
 
   }
@@ -90,7 +90,7 @@ export class LoginPage {
     if(this.smsmode)
     {
       this.url.mode='sms';
-      this.nav.setRoot(RegisterPage);
+      this.nav.setRoot(RegisterPage,{mode:"Offline"});
     }
   }
   affichemdp() {

@@ -1,7 +1,7 @@
-import {Component} from "@angular/core";
-import {NavController} from "ionic-angular";
+import {ApplicationRef, Component} from "@angular/core";
+import {AlertController, NavController, NavParams} from "ionic-angular";
 import {LoginPage} from "../login/login";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {WheelSelector} from "@ionic-native/wheel-selector";
 import {NFC} from "@ionic-native/nfc";
 import {Storage} from "@ionic/storage";
@@ -36,7 +36,11 @@ filepathrecto : string;
 filepathverso : string;
 filename : string;
 idcommune :number;
-
+showForm:boolean=false;
+mode:string="";
+icone:string;
+messagecdeao:any;
+cdeaoinvalid:boolean=true;
 listeRegion =[{description:"DAKAR"},{description:"DIOURBEL"},{description:"FATICK"},{description:"KAFFRINE"},{description:"KAOLACK"},
                 {description :"KEDOUGOU"},{description:"KOLDA"},{description:"LOUGA"},{description:"MATAM"},{description:"SAINT LOUIS"},
                  {description:"SEDHIOU"},{description:"TAMBACOUNDA"},{description:"THIES"},{description:"ZIGUINCHOR"}];
@@ -276,16 +280,16 @@ listesCommunes = [
     {description:"SINDIAN"},{description:"SUEL"},{description:"TENGHORI"}
     ]
 
-
-
 ];
 
-  constructor(private sms:SMS,private sanitizer: DomSanitizer,private base64: Base64,public nav: NavController,private ftp:FTP,private file:File,private filePath: FilePath,private camera:Camera,private URL:GlobalVariableProvider,private api :ApiProvider,private formbuilder : FormBuilder,private selector:WheelSelector,private nfc :NFC,private store:Storage) {
+  constructor(private appliref:ApplicationRef,private sms:SMS,private alertCrtl: AlertController,private sanitizer: DomSanitizer,private base64: Base64,private navParam:NavParams,public nav: NavController,private ftp:FTP,private file:File,private filePath: FilePath,private camera:Camera,private URL:GlobalVariableProvider,private api :ApiProvider,private formbuilder : FormBuilder,private selector:WheelSelector,private nfc :NFC,private store:Storage) {
 
 
     let date = new Date();
     let datesuivant =date.setFullYear(date.getFullYear() - this.URL.Ageminimum);
     this.minDate = new Date(datesuivant).toISOString();
+    this.mode = this.navParam.get('mode');
+    this.icone = this.mode=="Online"?"ios-wifi-outline":"ios-mail-outline";
 
   this.datauser = this.formbuilder.group({
     nom: ['', Validators.required],
@@ -308,74 +312,107 @@ listesCommunes = [
     }, (err) => {
       this.api.showError("Impossible de lire la carte: "+err)
     }).subscribe((event) => {
+
       //alert('received ndef message. the tag contains: '+ event.tag);
       //alert('decoded tag id'+ this.nfc.bytesToHexString(event.tag.id));
-      this.api.showToast("L'id de la carte est recuperé avec succès .")
+     // this.showForm=true;
       this.datauser.controls['idnfc'].setValue(event.tag.id);
       this.datauser.controls['timestamp'].setValue(Date.now());
       this.filename = this.datauser.controls['idnfc'].value+"_"+this.datauser.controls['timestamp'].value+"_";
+      this.showForm=true;
+      if(this.showForm==true)
+        this.api.showToast("L'id de la carte est recuperé avec succès .");
 
 
-
+      // this.appliref.tick();
     })
-
-
+  }
+  resetcdeao(){
+    this.cdeaoinvalid =false;
   }
   connectftp(){
-
-    if(this.URL.mode!='sms')
+    if(this.recto==null || this.verso==null)
     {
-      if(this.isphoto)
-      {
-        this.api.afficheloading();
-        this.ftp.connect('ftp.ajit.sn', 'ajitsnjgdk', 'Change2018')
-          .then((res: any) => {
-
-
-            this.ftp.upload(this.filepathrecto,"/www/parrainage/ws/cni/"+this.filename+"recto.png").subscribe(data=>{
-              if(data ==1){
-                this.ftp.upload(this.filepathverso,"/www/parrainage/ws/cni/"+this.filename+"verso.png").subscribe(data=>{
-                  if(data==1)
-                    this.register()
-                })
-                ;
-
-              }
-            },error => {
-              this.api.dismissloadin();
-              this.api.showError("Impossible d'envoyer l'image "+JSON.stringify(error))
-            })
-          })
-          .catch((error: any) =>{
-            this.api.dismissloadin();
-            this.api.showError('Impossible de se connecter au serveur ftp '+JSON.stringify(error) );
-          });
-      }
-      else{
-        this.api.showError("Veuillez prendre en photo l'inscrit")
-      }
+      this.api.showError("Veuillez prendre en photo le recto et le verso de la carte CDEAO");
+      return false;
     }
-    else{
-     // let msg ="parrain|Dame|Camara|01-01-2001|h|775067661|123456789012|12345678987654321|098765432|234";
-      let datenaiss = this.formaterdate(this.datauser.controls['datenaissance'].value);
-      let msg ="parrain|"+this.datauser.controls['prenom'].value+"|"+this.datauser.controls['nom'].value+"|"+datenaiss+"|";
-      msg+= this.datauser.controls['genre'].value+"|"+this.datauser.controls['telephone'].value+"|";
-      msg+= this.datauser.controls['idnfc'].value+"|"+this.datauser.controls['cdeao'].value+"|";
-      msg+= this.datauser.controls['electeur'].value+"|"+this.idcommune
-      console.log("Message "+msg);
-      this.api.afficheloading();
-      this.sms.send('766026389', msg);
+    let alert =this.alertCrtl.create({
+      title: 'Parrainage',
+      message:"Etes-vous sûr que les données saisies sont bien conformes  ?",
 
-      setTimeout(() => {
-       this.api.dismissloadin();
-        this.api.showAlert("Parrain "+this.datauser.controls['prenom'].value+" "+this.datauser.controls['nom'].value+" est inscrit avec succés");
-        this.datauser.reset();
-        this.datauser.controls['idnfc'].setValue("");
-        this.recto = null;
-        this.verso = null;
-        this.isphoto = false;
-      }, 3000);
-    }
+      buttons: [
+        {
+          text: 'Corriger',
+          role: 'cancel',
+          handler: () => {
+
+          }
+        },
+        {
+          text: 'Oui',
+          handler: () => {
+
+            if(this.URL.mode!='sms')
+            {
+              /*if(this.recto!=null && this.verso!=null)
+              {*/
+                this.api.afficheloading();
+                this.ftp.connect('ftp.ajit.sn', 'ajitsnjgdk', 'Change2018')
+                  .then((res: any) => {
+
+
+                    this.ftp.upload(this.filepathrecto,"/www/parrainage/ws/cni/"+this.filename+"recto.jpg").subscribe(data=>{
+                      if(data ==1){
+                        this.ftp.upload(this.filepathverso,"/www/parrainage/ws/cni/"+this.filename+"verso.jpg").subscribe(data=>{
+                          if(data==1)
+                            this.register()
+                        })
+                        ;
+
+                      }
+                    },error => {
+                      this.api.dismissloadin();
+                      this.api.showError("Impossible d'envoyer l'image "+JSON.stringify(error))
+                    })
+                  })
+                  .catch((error: any) =>{
+                    this.api.dismissloadin();
+                    this.api.showError('Impossible de se connecter au serveur ftp '+JSON.stringify(error) );
+                  });
+             /* }
+              else{
+                this.api.showError("Veuillez prendre en photo le recto et le verso de la carte CDEAO")
+              }*/
+            }
+            else{
+              // let msg ="parrain|Dame|Camara|01-01-2001|h|775067661|123456789012|12345678987654321|098765432|234";
+              let datenaiss = this.formaterdate(this.datauser.controls['datenaissance'].value);
+              let msg ="parrain|"+this.datauser.controls['prenom'].value+"|"+this.datauser.controls['nom'].value+"|"+datenaiss+"|";
+              msg+= this.datauser.controls['genre'].value+"|"+this.datauser.controls['telephone'].value+"|";
+              msg+= this.datauser.controls['idnfc'].value+"|"+this.datauser.controls['cdeao'].value+"|";
+              msg+= this.datauser.controls['electeur'].value+"|"+this.idcommune
+              console.log("Message "+msg);
+              this.api.afficheloading();
+              this.sms.send('766026389', msg);
+
+              setTimeout(() => {
+                this.api.dismissloadin();
+                this.api.showAlert("Parrain "+this.datauser.controls['prenom'].value+" "+this.datauser.controls['nom'].value+" est inscrit avec succés");
+                this.datauser.reset();
+                this.datauser.controls['idnfc'].setValue("");
+                this.recto = null;
+                this.verso = null;
+                this.isphoto = false;
+              }, 3000);
+            }
+
+          }
+        }
+      ]
+    });
+    alert.present();
+
+
 
 
 
@@ -405,7 +442,22 @@ this.api.afficheloading();
     return date.substr(8,2)+"-"+date.substr(5,2)+"-"+date.substr(0,4);
 
   }
+  changementsexe(){
+   // alert(this.datauser.controls['genre'].value);
+   let sexe =this.datauser.controls['genre'].value;
+   this.datauser.removeControl('cdeao')
+    if(sexe=="H"){
+     this.datauser.addControl('cdeao',new FormControl('',Validators.compose([Validators.pattern('[1][0-9]*'),Validators.minLength(17),Validators.maxLength(17)])))
+      //this.datauser.controls['cdeao'].setValidators([Validators.pattern('[1][0-9]*'),Validators.minLength(17),Validators.maxLength(17)]);
+      this.messagecdeao ="Commence par 1 pour un homme";
+    }
+    if(sexe=="F"){
+      this.datauser.addControl('cdeao',new FormControl('',Validators.compose([Validators.pattern('[2][0-9]*'),Validators.minLength(17),Validators.maxLength(17)])))
 
+      // this.datauser.controls['cdeao'].setValidators([Validators.pattern('[2][0-9]*'),Validators.minLength(17),Validators.maxLength(17)]);
+      this.messagecdeao ="Commence par 2 pour une femme";
+    }
+  }
   veriftel()
   {
     let suffix =  this.datauser.controls['telephone'].value.substring(0,2);
@@ -458,6 +510,7 @@ this.api.afficheloading();
                 this.recto = null;
                 this.verso = null;
                 this.isphoto = false;
+                this.showForm=false;
               }
               else this.api.showError(val.message)
 
@@ -599,13 +652,28 @@ this.api.afficheloading();
           this.api.showError("Veuillez approchez votre carte d'abord!")
         }
         else {
+/*          const options: CameraOptions = {
+            quality: 100,
+            destinationType: this.camera.DestinationType.FILE_URI,
+            encodingType: this.camera.EncodingType.JPEG,
+            mediaType: this.camera.MediaType.PICTURE
+          }
+
+          this.camera.getPicture(options).then((imageData) => {
+            // imageData is either a base64 encoded string or a file URI
+            // If it's base64 (DATA_URL):
+            let base64Image = 'data:image/jpeg;base64,' + imageData;
+          }, (err) => {
+            // Handle error
+          });*/
 
           const options: CameraOptions = {
             quality: 100,
             destinationType: this.camera.DestinationType.FILE_URI,
-            encodingType: this.camera.EncodingType.PNG,
-            targetWidth : 180,
-            targetHeight : 100,
+           // encodingType: this.camera.EncodingType.PNG,
+            encodingType: this.camera.EncodingType.JPEG,
+           // targetWidth : 180,
+           // targetHeight : 100,
 
             correctOrientation:true,
             allowEdit :true,
@@ -617,7 +685,8 @@ this.api.afficheloading();
 
             this.base64.encodeFile(imageData).then((base64File: string) => {
 
-              let img= "data:image/png;base64,"+base64File.replace("data:image/*;charset=utf-8;base64,","");
+            //  let img= "data:image/png;base64,"+base64File.replace("data:image/*;charset=utf-8;base64,","");
+              let img= "data:image/jpeg;base64,"+base64File.replace("data:image/*;charset=utf-8;base64,","");
               this.isphoto = true;
               this.recto = this.sanitizer.bypassSecurityTrustUrl(img);
               console.log("Encodage===>"+JSON.stringify(base64File));
@@ -631,9 +700,9 @@ this.api.afficheloading();
 
                 let imagePath = path.substr(0, path.lastIndexOf("/") + 1);
                 let imageName = path.substring(path.lastIndexOf("/") + 1, path.length);
-                this.filepathrecto = imagePath+""+this.filename+"recto.png";
+                this.filepathrecto = imagePath+""+this.filename+"recto.jpg";
 
-                this.file.moveFile(imagePath, imageName, imagePath, this.filename+"recto.png")
+                this.file.moveFile(imagePath, imageName, imagePath, this.filename+"recto.jpg")
                   .then(newFile => {
                        //this.photo = newFile;
                    // this.filepath = newFile.nativeURL;
@@ -662,9 +731,10 @@ this.api.afficheloading();
       const options: CameraOptions = {
         quality: 100,
         destinationType: this.camera.DestinationType.FILE_URI,
-        encodingType: this.camera.EncodingType.PNG,
-        targetWidth : 180,
-        targetHeight : 100,
+       // encodingType: this.camera.EncodingType.PNG,
+        encodingType: this.camera.EncodingType.JPEG,
+       // targetWidth : 180,
+      //  targetHeight : 100,
 
         correctOrientation:true,
         allowEdit :true,
@@ -676,7 +746,7 @@ this.api.afficheloading();
 
         this.base64.encodeFile(imageData).then((base64File: string) => {
 
-          let img= "data:image/png;base64,"+base64File.replace("data:image/*;charset=utf-8;base64,","");
+          let img= "data:image/jpeg;base64,"+base64File.replace("data:image/*;charset=utf-8;base64,","");
           this.isphoto = true;
           this.verso = this.sanitizer.bypassSecurityTrustUrl(img);
           console.log("Encodage===>"+JSON.stringify(base64File));
@@ -690,9 +760,9 @@ this.api.afficheloading();
 
             let imagePath = path.substr(0, path.lastIndexOf("/") + 1);
             let imageName = path.substring(path.lastIndexOf("/") + 1, path.length);
-            this.filepathverso = imagePath+""+this.filename+"verso.png";
+            this.filepathverso = imagePath+""+this.filename+"verso.jpg";
 
-            this.file.moveFile(imagePath, imageName, imagePath, this.filename+"verso.png")
+            this.file.moveFile(imagePath, imageName, imagePath, this.filename+"verso.jpg")
               .then(newFile => {
                 //this.photo = newFile;
                 // this.filepath = newFile.nativeURL;
