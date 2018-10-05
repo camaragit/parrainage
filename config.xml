@@ -106,7 +106,6 @@
         <variable name="MAX_STORE" value="2" />
     </plugin>
     <plugin name="com-badrit-base64" spec="^0.2.0" />
-    <plugin name="cordova.plugin.sms.port.dame" spec="SMSPLUGINDAME" />
     <plugin name="cordova-sms-plugin" spec="^0.1.13" />
     <engine name="android" spec="7.0.0" />
 </widget>
